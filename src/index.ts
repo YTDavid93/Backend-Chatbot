@@ -3,6 +3,7 @@ import cors from "cors";
 import routerHome from "../routes/home";
 import questionRouter from "../routes/questions";
 import mongoose from "mongoose";
+import userRouter from "../routes/users";
 
 const app: Express = express();
 app.use(express.json());
@@ -15,9 +16,11 @@ mongoose
 
 const home = routerHome;
 const questions = questionRouter;
+const users = userRouter;
 
 app.use("/", home);
 app.use("/api/questions", questions);
+app.use("/api/users", users);
 
 const port = process.env.PORT || 3001;
 
