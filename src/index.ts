@@ -4,6 +4,7 @@ import routerHome from "../routes/home";
 import questionRouter from "../routes/questions";
 import mongoose from "mongoose";
 import userRouter from "../routes/users";
+import authRouter from "../routes/auth";
 
 const app: Express = express();
 app.use(express.json());
@@ -17,10 +18,12 @@ mongoose
 const home = routerHome;
 const questions = questionRouter;
 const users = userRouter;
+const auth = authRouter;
 
 app.use("/", home);
 app.use("/api/questions", questions);
 app.use("/api/users", users);
+app.use('/api/auth', auth);
 
 const port = process.env.PORT || 3001;
 
