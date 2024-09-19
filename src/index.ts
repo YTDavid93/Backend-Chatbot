@@ -5,10 +5,16 @@ import questionRouter from "../routes/questions";
 import mongoose from "mongoose";
 import userRouter from "../routes/users";
 import authRouter from "../routes/auth";
+import config from "config";
 
 const app: Express = express();
 app.use(express.json());
 app.use(cors());
+
+if(!config.get('jwtPrivateKey')) {
+  console.error('FATAL ERROR: jwtPrivateKey is not defined');
+  process.exit(1);
+}
 
 mongoose
   .connect("mongodb://localhost/chatbot")
