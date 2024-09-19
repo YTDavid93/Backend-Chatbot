@@ -2,8 +2,6 @@ import express, { Request, Response } from "express";
 import { User, validateUser } from "../models/user";
 import _ from "lodash";
 import bcrypt from "bcrypt";
-import jsonwentoken from "jsonwebtoken";
-import config from "config";
 
 const userRouter = express.Router();
 
@@ -20,7 +18,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
-  const token = jsonwentoken.sign({ _id: user._id }, config.get("jwtPrivateKey"));
+  const token = user.generateAuthToken();
 
   res.header('x-auth-token', token).send(_.pick(user, ["_id", "name", "email"]));
 });

@@ -1,10 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { z } from "zod";
+import jsonwebtoken from "jsonwebtoken";
+import config from "config";
 
-type User = {
-    name: string,
-    email: string,
-    password: string
+interface UserDocument extends Document {
+  name: string;
+  email: string;
+  password: string;
+  generateAuthToken: () => string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -29,9 +32,14 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-const User = mongoose.model("User", userSchema);
+userSchema.methods.generateAuthToken = function () {
+  const token = jsonwebtoken.sign({ _id: this._id }, config.get("jwtPrivateKey"));
+  return token;
+}
 
-const validateUser = (user: User) => {
+const User: Model<UserDocument> = mongoose.model<UserDocument>("User", userSchema);
+
+const validateUser = (user: { name: string; email: string; password: string}) => {
     const schema = z.object({
       name: z.string().min(1, { message: "name is required" }).max(50),
       email: z.string().email().min(5, { message: "email is required" }).max(255),

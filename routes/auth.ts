@@ -3,11 +3,9 @@ import { User } from "../models/user";
 import _ from "lodash";
 import bcrypt from "bcrypt";
 import { z } from "zod";
-import jsonwentoken from "jsonwebtoken";
-import config from "config";
 
 type Users = {
-    name: string,
+    email: string,
     password: string
 }
 
@@ -25,7 +23,7 @@ authRouter.post("/", async (req: Request, res: Response) => {
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if(!validPassword) return res.status(400).send("Invalid email and password");
 
-  const token = jsonwentoken.sign({ _id: user._id}, config.get('jwtPrivateKey'));
+  const token = user.generateAuthToken();
   
   res.send(token);
 }); 
