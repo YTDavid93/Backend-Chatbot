@@ -9,7 +9,11 @@ import config from "config";
 
 const app: Express = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    exposedHeaders: ["x-auth-token"],
+  })
+);
 
 if(!config.get('jwtPrivateKey')) {
   console.error('FATAL ERROR: jwtPrivateKey is not defined');
@@ -30,6 +34,7 @@ app.use("/", home);
 app.use("/api/questions", questions);
 app.use("/api/users", users);
 app.use('/api/auth', auth);
+
 
 const port = process.env.PORT || 3001;
 
