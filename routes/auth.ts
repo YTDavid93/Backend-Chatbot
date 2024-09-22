@@ -25,7 +25,7 @@ authRouter.post("/", async (req: Request, res: Response) => {
 
   const token = user.generateAuthToken().trim();
 
-  res.header("x-auth-token", token).send({ message: "Login successful" });
+  res.header("x-auth-token", token).send(token);
 });
 
 const validate = (user: Users) => {
