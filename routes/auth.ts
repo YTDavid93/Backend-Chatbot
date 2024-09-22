@@ -5,9 +5,9 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 
 type Users = {
-    email: string,
-    password: string
-}
+  email: string;
+  password: string;
+};
 
 const authRouter = express.Router();
 
@@ -21,12 +21,12 @@ authRouter.post("/", async (req: Request, res: Response) => {
 
   // compare the password
   const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if(!validPassword) return res.status(400).send("Invalid email and password");
+  if (!validPassword) return res.status(400).send("Invalid email and password");
 
   const token = user.generateAuthToken().trim();
-  
-  res.send(token);
-}); 
+
+  res.header("x-auth-token", token).send({ message: "Login successful" });
+});
 
 const validate = (user: Users) => {
   const schema = z.object({
