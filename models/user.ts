@@ -3,12 +3,26 @@ import { z } from "zod";
 import jsonwebtoken from "jsonwebtoken";
 import config from "config";
 
+
+interface Interaction {
+  question: string;
+  response: string;
+  createdAt: Date;
+}
+
 interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
+  interactions: Interaction[];
   generateAuthToken: () => string;
 }
+
+const interactionSchema = new mongoose.Schema({
+  question: { type: String, required: true },
+  response: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -17,19 +31,20 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 50,
   },
-  email:{
+  email: {
     type: String,
     required: true,
-    minlength: 5, 
+    minlength: 5,
     maxlength: 255,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
     required: true,
-    minlength: 5, 
-    maxlength: 1024
-  }
+    minlength: 5,
+    maxlength: 1024,
+  },
+  interactions: [interactionSchema],
 });
 
 userSchema.methods.generateAuthToken = function () {
