@@ -5,6 +5,7 @@ import config from "config";
 
 
 interface Interaction {
+  _id: string;
   question: string;
   response: string;
   createdAt: Date;
