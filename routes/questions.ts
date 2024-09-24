@@ -1,6 +1,5 @@
 import axios from "axios";
 import express, { Request, Response } from "express";
-import { Interaction } from "../models/question";
 import { User } from "../models/user";
 import auth from "../middleware/auth";
 
@@ -31,13 +30,30 @@ questionRouter.post("/", auth, async (req: Request, res: Response) => {
       { upsert: true, new: true }
     );
 
-    const lastInteraction = updatedUser.interactions[updatedUser.interactions.length - 1];
+    const lastInteraction =
+      updatedUser.interactions[updatedUser.interactions.length - 1];
 
-    return res.json({ answer: response.data.answer, interactionId: lastInteraction?._id });
+    return res.json({
+      answer: response.data.answer,
+      interactionId: lastInteraction?._id,
+    });
   } catch (error) {
     return res
       .status(500)
       .json({ error: "Failed to get a response from the Python API" });
+  }
+});
+
+questionRouter.get("/", auth, async (req: Request, res: Response) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId, "interactions");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    return res.status(200).json(user.interactions);
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to retrieve chat history" });
   }
 });
 
