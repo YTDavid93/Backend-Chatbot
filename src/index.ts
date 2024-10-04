@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import userRouter from "../routes/users";
 import authRouter from "../routes/auth";
 import config from "config";
+import conversationsRouter from "../routes/conversations";
 
 const app: Express = express();
 app.use(express.json());
@@ -15,8 +16,8 @@ app.use(
   })
 );
 
-if(!config.get('jwtPrivateKey')) {
-  console.error('FATAL ERROR: jwtPrivateKey is not defined');
+if (!config.get("jwtPrivateKey")) {
+  console.error("FATAL ERROR: jwtPrivateKey is not defined");
   process.exit(1);
 }
 
@@ -29,12 +30,13 @@ const home = routerHome;
 const questions = questionRouter;
 const users = userRouter;
 const auth = authRouter;
+const conversations = conversationsRouter;
 
 app.use("/", home);
 app.use("/api/questions", questions);
 app.use("/api/users", users);
-app.use('/api/auth', auth);
-
+app.use("/api/auth", auth);
+app.use("/api/conversations", conversations);
 
 const port = process.env.PORT || 3001;
 
