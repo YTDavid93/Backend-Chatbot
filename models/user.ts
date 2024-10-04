@@ -15,6 +15,7 @@ interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
+  conversations: mongoose.Schema.Types.ObjectId[]; 
   interactions: Interaction[];
   generateAuthToken: () => string;
 }
@@ -46,6 +47,9 @@ const userSchema = new mongoose.Schema({
     maxlength: 1024,
   },
   interactions: [interactionSchema],
+  conversations: [
+    { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
+  ],
 });
 
 userSchema.methods.generateAuthToken = function () {
