@@ -23,20 +23,6 @@ conversationsRouter.get("/", auth, async (req: Request, res: Response) => {
   }
 });
 
-// get conversation with id
-conversationsRouter.get(
-  "/:conversationId",
-  auth,
-  async (req: Request, res: Response) => {
-    const conversation = await Conversation.findById(req.params.conversationId);
-    if (!conversation)
-      return res
-        .status(404)
-        .send("The conversations with the given Id was not found");
-    res.send(conversation);
-  }
-);
-
 conversationsRouter.post("/", auth, async (req: Request, res: Response) => {
   const { title, initialMessage } = req.body;
 
@@ -141,6 +127,35 @@ conversationsRouter.post(
         .status(500)
         .json({ error: "Failed to add a message to the conversation" });
     }
+  }
+);
+
+conversationsRouter.get(
+  "/:conversationId",
+  auth,
+  async (req: Request, res: Response) => {
+    const conversation = await Conversation.findById(req.params.conversationId);
+    if (!conversation)
+      return res
+        .status(404)
+        .send("The conversations with the given Id was not found");
+    res.send(conversation);
+  }
+);
+
+conversationsRouter.delete(
+  "/:conversationId",
+  auth,
+  async (req: Request, res: Response) => {
+    const conversation = await Conversation.findByIdAndDelete(
+      req.params.conversationId
+    );
+    if (!conversation)
+      return res
+        .status(404)
+        .send("The conversation with the given Id was not found.");
+
+    res.send(conversation);
   }
 );
 
