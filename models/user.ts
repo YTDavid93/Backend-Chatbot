@@ -63,7 +63,7 @@ const validateUser = (user: { name: string; email: string; password: string}) =>
     const schema = z.object({
       name: z.string().min(1, { message: "name is required" }).max(50),
       email: z.string().email().min(5, { message: "email is required" }).max(255),
-      password: z.string().min(5, { message: "email is required" }).max(255),
+      password: z.string().min(5, { message: "password is required" }).max(255),
     });
 
     return schema.safeParse(user);
