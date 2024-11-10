@@ -4,27 +4,13 @@ import jsonwebtoken from "jsonwebtoken";
 import config from "config";
 
 
-interface Interaction {
-  _id: string;
-  question: string;
-  response: string;
-  createdAt: Date;
-}
-
 interface UserDocument extends Document {
   name: string;
   email: string;
   password: string;
   conversations: mongoose.Schema.Types.ObjectId[]; 
-  interactions: Interaction[];
   generateAuthToken: () => string;
 }
-
-const interactionSchema = new mongoose.Schema({
-  question: { type: String, required: true },
-  response: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now },
-});
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -46,7 +32,6 @@ const userSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 1024,
   },
-  interactions: [interactionSchema],
   conversations: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" },
   ],
